@@ -45,6 +45,7 @@ from .const import (
     CONF_MODEL,
     CONF_NUM_CTX,
     CONF_PROMPT,
+    CONF_SEARXNG_URL,
     CONF_THINK,
     DEFAULT_AI_TASK_NAME,
     DEFAULT_CONVERSATION_NAME,
@@ -52,6 +53,7 @@ from .const import (
     DEFAULT_MAX_HISTORY,
     DEFAULT_MODEL,
     DEFAULT_NUM_CTX,
+    DEFAULT_SEARXNG_URL,
     DEFAULT_THINK,
     DEFAULT_TIMEOUT,
     DOMAIN,
@@ -66,6 +68,12 @@ _LOGGER = logging.getLogger(__name__)
 STEP_USER_DATA_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_URL): TextSelector(
+            TextSelectorConfig(type=TextSelectorType.URL)
+        ),
+        vol.Optional(
+            CONF_SEARXNG_URL,
+            default=DEFAULT_SEARXNG_URL
+        ): TextSelector(
             TextSelectorConfig(type=TextSelectorType.URL)
         ),
     }
@@ -129,7 +137,10 @@ class OllamaConfigFlow(ConfigFlow, domain=DOMAIN):
 
         return self.async_create_entry(
             title=url,
-            data={CONF_URL: url},
+            data={
+                CONF_URL: url,
+                CONF_SEARXNG_URL: user_input.get(CONF_SEARXNG_URL, DEFAULT_SEARXNG_URL),
+            },
         )
 
     @classmethod
