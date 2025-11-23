@@ -3,7 +3,11 @@
     "step": {
       "user": {
         "data": {
-          "url": "[%key:common::config_flow::data::url%]"
+          "url": "[%key:common::config_flow::data::url%]",
+          "searxng_url": "SearXNG Instance URL"
+        },
+        "data_description": {
+          "searxng_url": "URL of your SearXNG instance (e.g., https://search.congeant.org/search)"
         }
       }
     },

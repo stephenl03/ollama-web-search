@@ -59,7 +59,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     # Register the web search tool
     try:
         from .websearch_tool import WebSearchTool
-        hass.helpers.llm.register_tool(WebSearchTool())
+        hass.helpers.llm.register_tool(WebSearchTool(hass))
     except Exception as e:
         _LOGGER.error(f"Failed to register WebSearchTool: {e}")
     return True
