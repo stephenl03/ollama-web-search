@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import logging
 from types import MappingProxyType
+from typing import TypeAlias
 
 import httpx
 import ollama
@@ -50,7 +51,7 @@ __all__ = [
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 PLATFORMS = (Platform.AI_TASK, Platform.CONVERSATION)
 
-type OllamaConfigEntry = ConfigEntry[ollama.AsyncClient]
+OllamaConfigEntry: TypeAlias = ConfigEntry[ollama.AsyncClient]
 
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
