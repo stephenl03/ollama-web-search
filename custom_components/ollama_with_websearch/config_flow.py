@@ -102,6 +102,9 @@ except Exception as e:
 class OllamaConfigFlow(ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Ollama."""
 
+    VERSION = 3
+    MINOR_VERSION = 3
+
     def __init__(self) -> None:
         """Initialize config flow."""
         _LOGGER.info("Initializing OllamaConfigFlow")
@@ -109,8 +112,6 @@ class OllamaConfigFlow(ConfigFlow, domain=DOMAIN):
         self.url: str | None = None
         _LOGGER.info("OllamaConfigFlow initialized successfully")
 
-    VERSION = 3
-    MINOR_VERSION = 3
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
