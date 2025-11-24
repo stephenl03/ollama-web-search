@@ -36,6 +36,7 @@ from .const import (
 )
 
 _LOGGER = logging.getLogger(__name__)
+_LOGGER.info("Loading Ollama integration __init__.py")
 
 __all__ = [
     "CONF_KEEP_ALIVE",
@@ -56,13 +57,25 @@ OllamaConfigEntry: TypeAlias = ConfigEntry[ollama.AsyncClient]
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Set up Ollama."""
-    await async_migrate_integration(hass)
+    _LOGGER.info("Starting async_setup for Ollama integration")
+    try:
+        await async_migrate_integration(hass)
+        _LOGGER.info("Migration completed successfully")
+    except Exception as e:
+        _LOGGER.error(f"Migration failed: {e}", exc_info=True)
+        raise
+
     # Register the web search tool
     try:
+        _LOGGER.info("Attempting to import WebSearchTool")
         from .websearch_tool import WebSearchTool
+        _LOGGER.info("WebSearchTool imported successfully, registering tool")
         hass.helpers.llm.register_tool(WebSearchTool(hass))
+        _LOGGER.info("WebSearchTool registered successfully")
     except Exception as e:
-        _LOGGER.error(f"Failed to register WebSearchTool: {e}")
+        _LOGGER.error(f"Failed to register WebSearchTool: {e}", exc_info=True)
+
+    _LOGGER.info("async_setup completed successfully")
     return True
 
 

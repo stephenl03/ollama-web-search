@@ -38,8 +38,18 @@ from homeassistant.helpers.selector import (
 )
 from homeassistant.util.ssl import get_default_context
 
-from . import OllamaConfigEntry
-from .const import (
+_LOGGER = logging.getLogger(__name__)
+_LOGGER.info("Starting to import config_flow module")
+
+try:
+    from . import OllamaConfigEntry
+    _LOGGER.info("Successfully imported OllamaConfigEntry")
+except Exception as e:
+    _LOGGER.error(f"Failed to import OllamaConfigEntry: {e}", exc_info=True)
+    raise
+
+try:
+    from .const import (
     CONF_KEEP_ALIVE,
     CONF_MAX_HISTORY,
     CONF_MODEL,
@@ -61,34 +71,46 @@ from .const import (
     MIN_NUM_CTX,
     MODEL_NAMES,
 )
+    _LOGGER.info("Successfully imported constants from .const")
+except Exception as e:
+    _LOGGER.error(f"Failed to import from .const: {e}", exc_info=True)
+    raise
 
-_LOGGER = logging.getLogger(__name__)
 
+_LOGGER.info("Creating STEP_USER_DATA_SCHEMA")
 
-STEP_USER_DATA_SCHEMA = vol.Schema(
-    {
-        vol.Required(CONF_URL): TextSelector(
-            TextSelectorConfig(type=TextSelectorType.URL)
-        ),
-        vol.Optional(
-            CONF_SEARXNG_URL,
-            default=DEFAULT_SEARXNG_URL
-        ): TextSelector(
-            TextSelectorConfig(type=TextSelectorType.URL)
-        ),
-    }
-)
+try:
+    STEP_USER_DATA_SCHEMA = vol.Schema(
+        {
+            vol.Required(CONF_URL): TextSelector(
+                TextSelectorConfig(type=TextSelectorType.URL)
+            ),
+            vol.Optional(
+                CONF_SEARXNG_URL,
+                default=DEFAULT_SEARXNG_URL
+            ): TextSelector(
+                TextSelectorConfig(type=TextSelectorType.URL)
+            ),
+        }
+    )
+    _LOGGER.info("Successfully created STEP_USER_DATA_SCHEMA")
+except Exception as e:
+    _LOGGER.error(f"Failed to create STEP_USER_DATA_SCHEMA: {e}", exc_info=True)
+    raise
 
 
 class OllamaConfigFlow(ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Ollama."""
 
-    VERSION = 3
-    MINOR_VERSION = 3
-
     def __init__(self) -> None:
         """Initialize config flow."""
+        _LOGGER.info("Initializing OllamaConfigFlow")
+        super().__init__()
         self.url: str | None = None
+        _LOGGER.info("OllamaConfigFlow initialized successfully")
+
+    VERSION = 3
+    MINOR_VERSION = 3
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
@@ -422,3 +444,6 @@ def ollama_config_option_schema(
     )
 
     return schema
+
+
+_LOGGER.info("config_flow module loaded successfully")
